@@ -18,15 +18,15 @@ const validateBody = (req,res,next) => {
 
     if(!deliverTo) next({status: 400, message: "Order must include a deliverTo"})
     if(!mobileNumber) next({status: 400, message: "Order must include a mobileNumber"})
-    if(!dishes) next({status: "Order must include at least one dish"})
-    if(!Array.isArray(dishes)) next({status: "Order must include at least one dish"})
+    if(!dishes) next({status: 400, message: "Order must include at least one dish"})
+    if(!Array.isArray(dishes)) next({status: 400, message: "Order must include at least one dish"})
+
     if(dishes.length === 0) next({status: 400, message: "Order must include at least one dish"})
 
     dishes.map((dish,index) => {
         if(!Number.isInteger(dish.quantity)) next({status: 400, message: `Dish ${index} must have a quantity that is an integer greater than 0`})
         if(dish.quantity <= 0) next({status: 400, message: `Dish ${index} must have a quantity that is an integer greater than 0`})
     })
-
 
     res.locals.body = data
     next()
@@ -109,6 +109,7 @@ const read = (req,res,next) => {
 
 const update = (req,res,next) => {
     const body = res.locals.body
+    delete body.id
     const theOrder = res.locals.theOrder
     
     Object.keys(body).forEach( item => theOrder[item] = body[item] )
