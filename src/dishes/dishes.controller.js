@@ -48,7 +48,7 @@ const validateBody = (req,res,next) => {
     if(!name) next({status: 400, message: "Dish must include a name"})
     if(!description) next({status: 400, message: "Dish must include a description"})
     if(!price) next({status: 400, message: "Dish must include a price"})
-    if(typeof price === "string") next({status: 400, message: "Dish must have a price that is an integer greater than 0"})
+    if(!Number.isInteger(price)) next({status: 400, message: "Dish must have a price that is an integer greater than 0"})
     if(price <= 0) next({status: 400, message: "Dish must have a price that is an integer greater than 0"})
     if(!image_url) next({status: 400, message: "Dish must include a image_url"})
 
@@ -89,13 +89,12 @@ const read = (req,res,next) => {
 }
 
 const update = (req,res,next) => {
+
+
     const dish = res.locals.dish
     const body = res.locals.body
 
-    dish.name = body.name
-    dish.description = body.description
-    dish.price = Number(body.price)
-    dish.image_url = body.image_url
+    Object.keys(body).forEach( item => dish[item] = body[item] )
 
     res.json({data: dish})
 

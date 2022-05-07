@@ -7,14 +7,14 @@ const oCtl = require("./orders.controller")
 
 router
     .route("/:orderId")
-    .get(oCtl.read)
-    .put(oCtl.update)
-    .delete(oCtl.destroy)
+    .get(oCtl.hasOrderId,oCtl.orderExists,oCtl.read)
+    .put(oCtl.hasOrderId,oCtl.orderExists,oCtl.validateBody, oCtl.validateUpdateBody,oCtl.update)
+    .delete(oCtl.hasOrderId, oCtl.orderExists,oCtl.destroy)
 
 router
     .route("/")
     .get(oCtl.list)
-    .post(oCtl.create)
+    .post(oCtl.validateBody, oCtl.create)
 
 
 module.exports = router;
